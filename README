@@ -1,0 +1,156 @@
+GNU Source Release Collection (GSRC)
+####################################
+
+Introduction
+------------
+
+The GNU Source Release Collection provides a simple way to install the
+latest GNU packages (and more) in their own directory (on an existing system).
+
+This is particularly useful when you want to install them on
+a system for which you do not have administrative rights, such as a
+shared cluster.  It simplifies the process of maintaining a collection
+of locally installed software by cleanly separating the files of each
+package (and each package version), and installing symbolic links to
+the files in the directory of your choice.
+
+Bioinformatics Source Release Collection is
+now part of GNU Source Release Collection GSRC.
+
+### Getting started
+
+First, get it. 
+
+bzr checkout bzr://bzr.savannah.gnu.org/gsrc/trunk/ gsrc
+
+( or download a tar file from ftp://ftp.gnu.org/gnu, but
+bzr method will bring up-to-date files, which change daily.)
+ 
+
+To get started, you must first configure it. From a shell, type:
+
+    $ ./bootstrap
+    $ ./configure --prefix=$HOME/gnu
+
+You may choose to install the GNU software to any location you like by
+setting the `--prefix' argument (they will be installed to ~/gnu in
+the above example).
+
+To update, in the gsrc directory, just do:
+
+bzr update
+
+You will find the available GNU packages under the `gnu'
+sub-directory. Since they encompass a large number of packages in
+their own right, the GNUstep and GNOME projects have their own
+sub-directories: `gnustep' and `gnome', respectively.
+Also 'bio' for bioinformatics, and 'other' for whatever else.
+
+To get help on getting started, type "make help".
+
+Status
+------
+
+For a complete listing of packages and their current status in GSRC,
+see https://www.gnu.org/software/gsrc/package-list.html
+
+
+Bugs and build failures
+-----------------------
+
+If you encounter a package that does not build properly, please first
+check its status in `TODO'; there are a few packages which are known to
+not build properly. If the affected package is listed as `DONE' and
+not `BROKEN', then this should be reported. Similarly, if you find any
+outdated packages, please report them. All problems can be sent to the
+GSRC bug mailing list <bug-gsrc@gnu.org>.
+
+## Featured software
+
+If a program is missing from GSRC or BioSRC, please send a message to the
+mailing list bug-gsrc@gnu.org  to request its addition.
+Similarly, if you notice that a program version is out-of-date, please
+send a message.
+
+Only software that is licensed under an accepted free software license
+will be included in GSRC/BioSRC.  Lamentably, many bioinformatics programs
+are released in binary format only, under proprietary licenses, under
+otherwise restrictive licenses ("...for academic use only...") or,
+just as bad, with no explicit license at all (which effectively makes
+the software proprietary).  Distributing binary-only files is
+tantamount to hiding your scientific methods, while restrictive,
+proprietary licenses undermine the principles of open and
+collaborative science.  Thus, the use of such programs should not be
+encouraged.  Finally, anyone installing software with BioSRC should be
+confident that they have full permission to use the software in any
+way they like.  We don't want to provide software that not everyone
+can use!  If you wish to have a program added to BioSRC that is
+proprietary or under a restrictive license, please contact the
+software's author(s) to encourage them to re-release the software
+under an appropriate license.
+
+## Supported systems
+
+GSCR/BioSRC is geared towards installing software on GNU/Linux systems.
+It may be possible to use it on other Unix-oid operating systems,
+however note that you might need to modify some files to make them work.
+Patches to support building on other systems will only be accepted if
+they do not disrupt building on GNU/Linux systems.
+
+Windows?  You might have some luck with CygWin, but no support can be
+given in that regard.
+
+
+
+Copying
+-------
+
+GSRC is based on the GAR build system by Nick Moffitt and GARstow
+enhancements by Adam Sampson.
+
+Files from GAR and GARstow are under the following license unless
+otherwise noted:
+
+  Copyright (C) 2001 Nick Moffitt
+  Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010 Adam Sampson
+
+  Redistribution and/or use, with or without modification, is
+  permitted.  This software is without warranty of any kind.  The
+  author(s) shall not be liable in the event that use of the
+  software causes damage.
+
+Files specific to GSRC, including the build recipes, are Copyright (C)
+Free Software Foundation and licensed under the GNU General Public
+License, Version 3, or (at your option) any later version. Please see
+the file `COPYING' for more information.
+ 
+
+<!-- Copyright (C) 2014 Brandon Invergo <brandon@invergo.net> -->
+
+<!-- Author: Brandon Invergo <brandon@invergo.net> -->
+
+<!-- This program is free software; you can redistribute it and/or -->
+<!-- modify it under the terms of the GNU General Public License -->
+<!-- as published by the Free Software Foundation; either version 3 -->
+<!-- of the License, or (at your option) any later version. -->
+
+<!-- This program is distributed in the hope that it will be useful, -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the -->
+<!-- GNU General Public License for more details. -->
+
+<!-- You should have received a copy of the GNU General Public License -->
+<!-- along with this program. If not, see <http://www.gnu.org/licenses/>. -->
+
+
+## Copying
+
+BioSRC is based on the GNU Source Release Collection (GSRC), which is
+in turn based on the GAR build system by Nick Moffitt and GARstow
+enhancements by Adam Sampson.
+
+Files specific to BioSRC, including the build recipes, are Copyright
+(C) Brandon Invergo and licensed under the GNU General Public License,
+Version 3, or (at your option) any later version. Please see the file
+`COPYING` for more information.
+ 

@@ -1,0 +1,13 @@
+
+GNU project to create a free/libre version of the Wacom Inkling
+SketchManager. Instead of integrating with proprietary programs,
+this program aims to be compatible with free software alternatives
+like Inkscape.  It can  display and merge WPI files, export to Inkscape
+SVG (preserving layers), PDF, PNG and JSON,  convert all WPI files in a
+directory to SVG, automatically use different colors when the "new layer"
+is pressed multiple times,  give control over stroke pressure,  export
+timing information in JSON, interact with the timeline of your drawing.
+There is an Inkscape extension available that allows you to open WPI
+files with Inkscape "directly".
+
+

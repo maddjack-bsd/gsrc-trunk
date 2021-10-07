@@ -1,0 +1,5 @@
+## Configuration options ##
+## adjust as needed
+
+CONFIGURE_OPTS ?= -U HAVE_COLORD -U HAVE_PACKAGEKIT -U HAVE_WEBP
+BUILD_OPTS ?= -U HAVE_COLORD -U HAVE_PACKAGEKIT -U HAVE_WEBP

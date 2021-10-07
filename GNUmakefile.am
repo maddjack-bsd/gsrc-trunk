@@ -1,0 +1,151 @@
+# GNUmakefile.am --- 
+
+# Copyright (C) 2013, 2014, 2016 Brandon Invergo <brandon@invergo.net>
+
+# Author: Brandon Invergo <brandon@invergo.net>
+
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+
+#GROUPS = bio libs tools dev gnu gnustep gnome alpha other local 
+GROUPS = bio freedesktop gnome gnu gnualpha gnustep  gstreamer   other xorg local external decommissioned
+
+SUBDIRS = doc
+EXTRA_DIST = bootstrap gar/gar.mk gar/gar.master.mk gar/gar.conf.mk	\
+gar/gar.env.mk gar/gar.lib.mk  \
+gar/gar.lib/auto.mk	\				\
+gar/gar.lib/broken.mk gar/gar.lib/cmake.mk \
+gar/gar.lib/external.mk gar/gar.lib/gnustep.mk \
+gar/gar.lib/info.mk gar/gar.lib/python.mk \
+gar/gar.lib/wrong_arch.mk \
+$(foreach   GROUP,$(GROUPS),pkg/$(GROUP)/*) gsrc.in MANIFEST.rec
+bin_SCRIPTS = gsrc
+CLEANFILES = $(bin_SCRIPTS)
+
+find_packages = $(sort $(filter-out $(IGNORE),$(patsubst %/,%,$(filter %/,$(wildcard $(1))))))
+# better coding is possible
+#LIBS_PACKAGES = $(call find_packages, pkg/libs/*/)
+#TOOLS_PACKAGES = $(call find_packages, pkg/tools/*/)
+#DEV_PACKAGES = $(call find_packages, pkg/dev/*/)
+BIO_PACKAGES = $(call find_packages, pkg/bio/*/)
+GNU_PACKAGES = $(call find_packages, pkg/gnu/*/)
+GNUALPHA_PACKAGES = $(call find_packages, pkg/gnualpha/*/)
+GNUSTEP_PACKAGES = $(call find_packages, pkg/gnustep/*/)
+GNOME_PACKAGES = $(call find_packages, pkg/gnome/*/)
+FREEDESKTOP_PACKAGES = $(call find_packages, pkg/freedesktop/*/)
+GSTREAMER_PACKAGES = $(call find_packages, pkg/gstreamer/*/)
+OTHER_PACKAGES = $(call find_packages, pkg/other/*/)
+XORG_PACKAGES = $(call find_packages, pkg/xorg/*/)
+#LOCAL_PACKAGES = $(call find_packages, pkg/local/*/)
+
+#PACKAGES ?= $(BIO_PACKAGES) $(LIBS_PACKAGES) $(TOOLS_PACKAGES) $(DEV_PACKAGES) $(GNU_PACKAGES) $(GNOME_PACKAGES) $(GNUSTEP_PACKAGES) $(OTHER_PACKAGES)  
+PACKAGES ?= $(BIO_PACKAGES)  $(GNU_PACKAGES) $(GNUALPHA_PACKAGES) $(GNUSTEP_PACKAGES)   $(GNOME_PACKAGES) $(FREEDESKTOP_PACKAGES) $(GSTREAMER_PACKAGES) $(OTHER_PACKAGES)  $(XORG_PACKAGES)
+PAGER ?= less
+PAGER_OPTS = "-r"
+
+FROM ?= yesterday
+TO ?= today
+HTML_LIST_TEMPLATE = util/templates/package-list.html.m4
+HTML_PKG_TEMPLATE = util/templates/package.html.templ
+RECFMT = @RECFMT@
+RECSEL = @RECSEL@
+DATE = $(shell date -u +"%c")
+
+all:
+	@fail= failcom='exit 1'; \
+	for f in x $(MAKEFLAGS); do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	for i in $(PACKAGES)  ; do \
+		if [ -d $$i ] ; then $(MAKE) -C $$i install || eval $$failcom;  fi \
+	done
+
+DISPLAY = cat
+DOC = doc
+
+.PHONY: help package-list gen-report manifest
+
+help: 
+	@$(DISPLAY) $(DOC)/help.txt
+
+package-list:
+	@for i in $(PACKAGES)  ; do \
+		if [ -d $$i ] ; then $(MAKE) -sC $$i pkg-info-curt || eval $$failcom;  fi \
+	done | $(PAGER) $(PAGER_OPTS)
+
+clean .DEFAULT:
+	@fail= failcom='exit 1'; \
+	for f in x $(MAKEFLAGS); do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	for i in $(PACKAGES)  ; do \
+		if [ -d $$i ] ; then $(MAKE) -C $$i $@ || eval $$failcom;  fi \
+	done
+
+gen-report:
+	@updates=`bzr log -rdate:$(FROM)..$(TO) | grep -E 'update .+ to [0-9]+\.*[0-9]*'`; \
+	nupdates=`printf "$$updates\n" | wc -l`; \
+	echo "Package updates: $$nupdates"; printf "$$updates\n" | sort | sed -r -e 's/update (.+) to ([0-9\.a-z]+).*/\1 \(\2\)/g'
+	@echo
+	@new=`bzr log -rdate:$(FROM)..$(TO) | grep -E 'add .+ at [0-9]+\.*[0-9]*'`; \
+	nnew=`printf "$$new\n" | wc -l`; \
+	echo "New packages: $$nnew"; printf "$$new\n" | sort | sed -r -e 's/add (.+) at ([0-9\.a-z]+).*/\1 \(\2\)/g'
+	@echo
+	@bfixes=`bzr log -rdate:$(FROM)..$(TO) | grep -E 'fix .+ build'`; \
+	nbfixes=`printf "$$bfixes\n" | wc -l`; \
+	echo "Fixed builds: $$nnew"; printf "$$bfixes\n" | sort | sed -r -e 's/fix (.+) build/\1/g'
+
+manifest-html:  manifest    package-list.html
+
+
+MANIFEST.rec: manifest
+
+manifest: 
+	@echo making  MANIFEST.rec
+	echo "# -*- mode: rec -*-" > MANIFEST.rec
+	echo "# Note: this file is a Recutils database (recfile)." >> MANIFEST.rec
+	echo "# See the GNU Recutils package for more information. " >> MANIFEST.rec
+	echo "%rec: Package" >> MANIFEST.rec
+	echo "%key: Garname" >> MANIFEST.rec
+	echo "%sort: Garname" >> MANIFEST.rec
+	echo "%doc: " >> MANIFEST.rec
+	echo "+ A database of packages in the combined GNU and Bioinformatics Source Release Collection (GSRC and BioSRC)" >> MANIFEST.rec
+	echo >> MANIFEST.rec
+	for i in $(PACKAGES); do \
+	        echo $$i ; \
+		if [ -d $$i ]; then \
+			$(MAKE) -s -C $$i pkg-rec >> MANIFEST.rec; \
+	 		echo >> MANIFEST.rec; \
+		fi \
+	done
+
+package-list.html: manifest MANIFEST.rec
+	printf "define(\`PACKAGE_LIST\', \`" > package-list.tmp
+	echo "`$(RECSEL) -S Directory MANIFEST.rec | $(RECFMT) -f $(HTML_PKG_TEMPLATE)`" >> package-list.tmp
+	echo "')" >> package-list.tmp
+	m4 -D UPDATE_DATE="$(DATE)" package-list.tmp  $(HTML_LIST_TEMPLATE) > $@
+	rm package-list.tmp
+
+
+
+dist-hook:
+	rm -rf `find $(distdir) -name work -o -name cookies -o -name download -o -name logs -o -name .update-pending -o -name .update-timestamp -o -name .commit -o -name logmsg -o -name *~`
+
+

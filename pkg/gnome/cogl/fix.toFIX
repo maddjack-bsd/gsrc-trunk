@@ -1,0 +1,6 @@
+ cp work/cogl-1.22.0/cogl/cogl-egl.h /opt/gsrc/packages/cogl-1.22.0/include/cogl/cogl/
+ cp work/cogl-1.22.0/cogl/cogl-egl-defines.h /opt/gsrc/packages/cogl-1.22.0/include/cogl/cogl/
+ ln -s /opt/gsrc/packages/cogl-1.22.0/include/cogl/cogl/cogl-egl.h  /opt/gsrc/include/cogl/cogl/
+ ln -s /opt/gsrc/packages/cogl-1.22.0/include/cogl/cogl/cogl-egl-defines.h  /opt/gsrc/include/cogl/cogl/
+
+ echo didnt work

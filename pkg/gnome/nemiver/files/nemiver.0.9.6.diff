@@ -1,0 +1,19 @@
+*** work/nemiver-0.9.6/src/dbgengine/nmv-dbg-common.h 2016-06-27 23:58:42.944135163 -0700
+--- work/nemiver-0.9.6/src/dbgengine/nmv-dbg-common.h	2016-06-27 23:59:12.955632402 -0700
+***************
+*** 171,177 ****
+  
+      bool has_slot () const
+      {
+!         return m_slot;
+      }
+  
+      template<class T>
+--- 171,177 ----
+  
+      bool has_slot () const
+      {
+!         return bool(m_slot);
+      }
+  
+      template<class T>

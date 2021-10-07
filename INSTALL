@@ -1,0 +1,51 @@
+The install process for GSRC is straight forward.
+
+Grab the current package description files from the internet with "bzr checkout" or "brz checkout", (the python 3 version):
+
+     $ bzr checkout bzr://bzr.savannah.gnu.org/gsrc/trunk/ gsrc
+        # (use "bzr checkout --lightweight" to download the latest revision only)
+
+Then
+
+     $ cd gsrc/
+     $ ./bootstrap                       # to create the configure script
+     $ ./configure --prefix=$HOME/gnu    # --prefix is directory to install the compiled packages
+                                         # Pick your --prefix by your wishes.
+
+                                         # You can give `./configure' the normal GNU configure arguments.
+					 # If you decide to change these, either reconfigure, 
+					 # or edit `config.mk'.
+
+
+     $ . ./setup.sh                      # This just sets some ENV variables and appends to PATH
+                                         # and other variables to allow GSRC to work seamlessly.
+                                         # Put this line in your .bashrc.
+     $ make install                      # installs the "gsrc" command itself and info docs.
+
+That is all that is necessary to set up the GSRC system. Everytime you wish to compile something in GSRC, first do
+
+
+      $   bzr update            # to get all the latest changes to all packages
+                                # ("brz" is python3 name)
+
+
+      $  make help              # will provide some 
+
+If you are curious about what is created in each of these steps:
+ ./bootstrap:
+    * aclocal.m4
+    * autom4te.cache/
+    * configure
+    * doc/Makefile.in
+    * doc/mdate-sh
+    * doc/texinfo.tex
+    * GNUmakefile.in
+    * install-sh
+    * missing
+ ./configure:
+    * config.log
+    * config.mk
+    * config.status
+    * doc/Makefile
+    * GNUmakefile
+

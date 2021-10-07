@@ -1,0 +1,12 @@
+diff -x config.log -x config.status -ru work/cd-hit-v4.6.1-2012-08-27/cdhit-common.c++ work/cd-hit-v4.6.1-2012-08-27/cdhit-common.c++
+--- work/cd-hit-v4.6.1-2012-08-27/cdhit-common.c++	2012-08-27 22:09:44.000000000 +0100
++++ work/cd-hit-v4.6.1-2012-08-27/cdhit-common.c++	2014-07-21 18:10:49.199468558 +0100
+@@ -2288,7 +2288,7 @@
+ 		double frac = max_sequences / (double) max_entries;
+ 		max_entries = (options.max_memory - mem_need) / sizeof(IndexCount);
+ 		max_sequences = (size_t)(max_entries * frac);
+-		if( max_sequences > MAX_TABLE_SEQ ) max_sequences = MAX_TABLE_SEQ;
++		if( max_sequences > MAX_TABLE_SEQ || max_sequences == 0 ) max_sequences = MAX_TABLE_SEQ;
+ 	}
+ 	printf( "Table limit with the given memory limit:\n" );
+ 	printf( "Max number of representatives: %zu\n", max_sequences );

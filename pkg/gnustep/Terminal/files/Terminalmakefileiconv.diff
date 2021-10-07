@@ -1,0 +1,19 @@
+The following patch might not be needed on your system.
+The patch addes the iconv library, needed in some cases.
+
+
+*** work/Terminal-0.9.8/GNUmakefile	2012-04-03 10:32:43.000000000 -0700
+--- work/Terminal-0.9.8/GNUmakefile	2015-10-13 00:28:48.356508189 -0700
+***************
+*** 48,55 ****
+--- 48,57 ----
+  else
+   Terminal_TOOL_LIBS += -lutil
+  endif
+  
++  Terminal_TOOL_LIBS += -liconv
++ 
+  Terminal_LOCALIZED_RESOURCE_FILES = Localizable.strings
+  Terminal_LANGUAGES = English Swedish German French Spanish Hungarian Turkish \
+  	Norwegian Russian Italian
+  

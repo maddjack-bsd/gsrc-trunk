@@ -1,0 +1,11 @@
+diff -x config.log -x config.status -ru work/pagan-msa/src/utils/check_version.cpp work/pagan-msa/src/utils/check_version.cpp
+--- work/pagan-msa/src/utils/check_version.cpp	2012-10-26 09:56:43.000000000 +0100
++++ work/pagan-msa/src/utils/check_version.cpp	2014-02-24 22:39:31.984417220 +0000
+@@ -21,6 +21,7 @@
+ #include "utils/check_version.h"
+ #include "utils/log_output.h"
+ 
++#include <unistd.h>
+ #include <stdio.h>
+ #include <sys/socket.h>
+ #include <arpa/inet.h>

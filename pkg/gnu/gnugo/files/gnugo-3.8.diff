@@ -1,0 +1,31 @@
+diff -x config.log -x config.status -ru tmp/gnugo-3.8/engine/liberty.h work/gnugo-3.8/engine/liberty.h
+--- tmp/gnugo-3.8/engine/liberty.h	2009-02-17 13:41:31.000000000 -0800
++++ work/gnugo-3.8/engine/liberty.h	2021-04-18 17:16:43.172676763 -0700
+@@ -857,8 +857,8 @@
+ extern struct worm_data worm[BOARDMAX];
+ 
+ /* Unconditionally meaningless moves. */
+-int meaningless_black_moves[BOARDMAX];
+-int meaningless_white_moves[BOARDMAX];
++extern int meaningless_black_moves[BOARDMAX];
++extern int meaningless_white_moves[BOARDMAX];
+ 
+ /* Surround cache (see surround.c) */
+ 
+diff -x config.log -x config.status -ru tmp/gnugo-3.8/interface/main.c work/gnugo-3.8/interface/main.c
+--- tmp/gnugo-3.8/interface/main.c	2009-02-17 13:41:31.000000000 -0800
++++ work/gnugo-3.8/interface/main.c	2021-04-18 17:18:12.928045200 -0700
+@@ -56,6 +56,13 @@
+ #include "sgftree.h"
+ #include "random.h"
+ 
++
++
++/* Unconditionally meaningless moves. */
++int meaningless_black_moves[BOARDMAX];
++int meaningless_white_moves[BOARDMAX];
++
++
+ static void show_copyright(void);
+ static void show_version(void);
+ static void show_help(void);

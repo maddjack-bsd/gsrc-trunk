@@ -1,0 +1,16 @@
+*** lindir.c.old	2019-05-07 19:17:55.684843696 -0700
+--- lndir.c	2019-05-07 19:19:39.458293009 -0700
+***************
+*** 57,62 ****
+--- 57,67 ----
+  */
+  #include <config.h>
+  
++ /* patch gsrc */
++ #define HAVE_SYMLINK
++ #define HAVE_READLINK
++ /* end patch gsrc */
++ 
+  #ifndef HAVE_SYMLINK
+  #error I need to be patched to support either hard links or copying.
+  #endif

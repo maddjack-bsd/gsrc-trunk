@@ -1,0 +1,15 @@
+  CC       compat.lo
+In file included from reader.c:1946:
+make-reader-flags.c:86:1: error: conflicting types for '_scm_to_make_reader_flag'
+ _scm_to_make_reader_flag (register const char *str, register size_t len)
+ ^~~~~~~~~~~~~~~~~~~~~~~~
+reader.c:1943:1: note: previous declaration of '_scm_to_make_reader_flag' was here
+ _scm_to_make_reader_flag (const char *, unsigned int);
+ ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from token-readers.c:1145:
+token-reader-lookup.c:122:1: error: conflicting types for '_scm_token_reader_lookup'
+ _scm_token_reader_lookup (register const char *str, register size_t len)
+ ^~~~~~~~~~~~~~~~~~~~~~~~
+token-readers.c:1142:1: note: previous declaration of '_scm_token_reader_lookup' was here
+ _scm_token_reader_lookup (const char *, unsigned int);
+ ^~~~~~~~~~~~~~~~~~~~~~~~

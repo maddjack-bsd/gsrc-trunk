@@ -1,0 +1,28 @@
+diff -x config.log -x config.status -ru tmp/csblast-2.2.3/src/Makefile work/csblast-2.2.3/src/Makefile
+--- tmp/csblast-2.2.3/src/Makefile	2012-12-12 10:11:10.000000000 +0000
++++ work/csblast-2.2.3/src/Makefile	2014-07-17 14:59:11.988050962 +0100
+@@ -282,6 +282,11 @@
+ cscp_neff: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
++cscp_neff_debug: $(OBJECTS_DEBUG)
++	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
++
++cscp_neff_prof: $(OBJECTS_PROF)
++	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ ### cstrainset_neff ###
+ 
+@@ -290,6 +295,12 @@
+ cstrainset_neff: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
++cstrainset_neff_debug: $(OBJECTS_DEBUG)
++	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
++
++cstrainset_neff_prof: $(OBJECTS_PROF)
++	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
++
+ 
+ ### csconvert ###
+ 

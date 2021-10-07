@@ -1,0 +1,21 @@
+*** work/gpaint-2-0.3.3/src/drawing.c~	2007-09-08 17:49:46.000000000 -0700
+--- work/gpaint-2-0.3.3/src/drawing.c	2016-06-07 19:59:14.186556627 -0700
+***************
+*** 427,433 ****
+                 _("Do you want to save the changes you made to \"%s\"?\nYour changes will be lost if you don't save them."),
+                 drawing->filename->str);
+  #ifdef GTK_STOCK_DISCARD
+!         gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_DISCARD,GTK_RESPONSE_DISCARD);
+  #else
+          gtk_dialog_add_button(GTK_DIALOG(dialog), _("Close _without Saving"), GTK_RESPONSE_NO);
+  #endif /* !GTK_STOCK_DISCARD */
+--- 427,435 ----
+                 _("Do you want to save the changes you made to \"%s\"?\nYour changes will be lost if you don't save them."),
+                 drawing->filename->str);
+  #ifdef GTK_STOCK_DISCARD
+!         /*gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_DISCARD,GTK_RESPONSE_DISCARD);*/
+! 		/* This is a guess, maybe-fix below... */
+!         gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_DISCARD,GTK_RESPONSE_NONE);
+  #else
+          gtk_dialog_add_button(GTK_DIALOG(dialog), _("Close _without Saving"), GTK_RESPONSE_NO);
+  #endif /* !GTK_STOCK_DISCARD */

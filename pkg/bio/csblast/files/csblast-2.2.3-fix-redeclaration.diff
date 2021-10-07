@@ -1,0 +1,20 @@
+diff -x config.log -x config.status -ru work/csblast-2.2.3/src/cstrainset_app.cc work/csblast-2.2.3/src/cstrainset_app.cc
+--- work/csblast-2.2.3/src/cstrainset_app.cc	2012-12-12 10:11:10.000000000 +0000
++++ work/csblast-2.2.3/src/cstrainset_app.cc	2014-07-17 14:20:59.573573727 +0100
+@@ -434,12 +434,12 @@
+       round = atoi(name.substr(i + 1).c_str());
+       if (round > 0) key = name.substr(0, i); // count-profiles refers to a specific round
+     }
+-    Groups::iterator it = groups.find(key);
+-    if (it == groups.end()) 
++    Groups::iterator it2 = groups.find(key);
++    if (it2 == groups.end()) 
+       groups[key] = GroupValue(1 << round, round);
+     else {
+-      it->second.first |= 1 << round;
+-      it->second.second = MAX(it->second.second, round);
++      it2->second.first |= 1 << round;
++      it2->second.second = MAX(it2->second.second, round);
+     }
+   }
+   fprintf(out_, "\n%zu files globbed\n", groups.size());

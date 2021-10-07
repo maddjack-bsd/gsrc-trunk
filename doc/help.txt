@@ -1,0 +1,34 @@
+Usage: make -C pkg/DIR/PACKAGE [target]
+
+DIR is currently one of: gnu gnualpha gnustep gnome bio other gstreamer freedesktop xorg
+
+Example: to build and install "GNU Hello"
+
+  make -C pkg/gnu/hello
+  make -C pkg/gnu/hello install
+  make -C pkg/gnu/hello clean
+
+The main targets are:
+
+ * pkg-info       - print info about the package
+ * help           - print package configuration options
+ * fetch-list     - print info about the files to be downloaded
+ * fetch          - download the source files
+ * checksum       - compare checksums against the sha256sum file
+ * checksig       - verify source tarball with gpg-keyring file
+ * extract        - unpack the tarball in the work/ subdirectory
+ * configure      - run configure
+ * build          - compile it (default)
+ * check          - run the testsuite
+ * install        - install to $(prefix)/
+ * clean          - delete temporary files in build directory
+ * uninstall      - un-stow a package
+ * uninstall-pkg  - completely remove a package
+
+ * install-src    - copy source code to $(prefix)/src/
+ * uninstall-src  - remove source code from $(prefix)/src/
+
+For a list of available packages, type "make package-list"
+or "make package-list.html"
+
+To build all currently tested packages, type "make"

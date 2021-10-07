@@ -1,0 +1,2 @@
+Edit the file gar.conf.mk to change these settings.
+When you are ready to build, type "make help"

@@ -1,0 +1,50 @@
+diff -x config.log -x config.status -ru tmp/tile-forth-2.1/src/error.c work/tile-forth-2.1/src/error.c
+--- tmp/tile-forth-2.1/src/error.c	1991-09-14 14:30:28.000000000 -0700
++++ work/tile-forth-2.1/src/error.c	2019-11-20 21:35:41.339679493 -0800
+@@ -159,7 +159,10 @@
+     (VOID) signal(SIGILL,  error_restart);
+     (VOID) signal(SIGTRAP, error_fatal);
+     (VOID) signal(SIGIOT,  error_fatal);
+-    (VOID) signal(SIGEMT,  error_fatal);
++    // ?
++    //(VOID) signal(SIGEMT,  error_fatal);
++    (VOID) signal(SIGINT,  error_fatal);
++	// ??
+     (VOID) signal(SIGFPE,  error_restart);
+     (VOID) signal(SIGBUS,  error_restart);
+     (VOID) signal(SIGSEGV, error_restart);
+diff -x config.log -x config.status -ru tmp/tile-forth-2.1/src/kernel.c work/tile-forth-2.1/src/kernel.c
+--- tmp/tile-forth-2.1/src/kernel.c	1991-09-14 14:30:39.000000000 -0700
++++ work/tile-forth-2.1/src/kernel.c	2019-11-20 21:35:41.339679493 -0800
+@@ -64,13 +64,13 @@
+ 
+ /* INTERNAL FORWARD DECLARATIONS */
+ 
+-extern code_entry qnumber;
+-extern code_entry terminate;
+-extern code_entry abort_entry;
++static code_entry qnumber;
++static code_entry terminate;
++static code_entry abort_entry;
+ extern entry toexception;
+-extern entry span;
+-extern entry state;
+-extern code_entry vocabulary;
++static entry span;
++static entry state;
++static code_entry vocabulary;
+ 
+ 
+ /* VOCABULARY LISTING PARAMETERS */
+diff -x config.log -x config.status -ru tmp/tile-forth-2.1/src/kernel.h work/tile-forth-2.1/src/kernel.h
+--- tmp/tile-forth-2.1/src/kernel.h	1991-09-14 14:30:35.000000000 -0700
++++ work/tile-forth-2.1/src/kernel.h	2019-11-20 21:35:41.339679493 -0800
+@@ -9,6 +9,8 @@
+ /* INCLUDED SYSTEM FUNCTIONS */
+ 
+ #include <strings.h>
++#include <string.h>
++#include <stdlib.h>
+ 
+ 
+ /* TYPING SYSTEM AND MISC. STRING MACROS */

@@ -1,0 +1,9 @@
+ cp ./work/gcc-9-*.build/gcc/include/unwind.h ./work/gcc-9-*/libstdc++-v3/libsupc++/
+ cp ./work/gcc-9-*.build/gcc/include/unwind.h ./work/gcc-9-*/gcc/ada/
+ cp ./work/gcc-9-*.build/gcc/include/unwind.h ./work/gcc-9-*/libgo/runtime/
+#cp ./work/gcc-9-*.build/gcc/include/unwind.h ./work/gcc-9-*.build/gcc/ada/rts/
+#cp ./work/gcc-9-*.build/gcc/include/unwind.h ./work/gcc-9-*.build/gcc/ada/rts_32/
+
+
+# during xgcc
+

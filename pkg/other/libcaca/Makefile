@@ -1,0 +1,46 @@
+
+# Copyright © 2017 Carl Hansen <carlhansen@gnu.org>
+#
+# This file is part of GSRC, the GNU Source Release Collection.
+#
+# GSRC is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# GSRC is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+# License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GSRC.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Send bug reports and comments about GSRC problems to bug-gsrc@gnu.org
+
+NAME =    libcaca
+GARNAME = libcaca
+GARVERSION =  0.99.beta19
+HOME_URL = http://www.gnome.org/
+DESCRIPTION = Color ascii-art library 
+define BLURB
+Color ascii-art library, used by liquidwar6 game.
+endef
+
+######################################################################
+
+
+MASTER_SITES = http://caca.zoy.org/
+MASTER_SUBDIR = files/$(GARNAME)/
+DISTFILES = $(DISTNAME).tar.gz 
+SIGFILES =
+
+BUILDDEPS =
+LIBDEPS =
+
+LICENSE = WTFPL Do What You Want To Public License http://www.wtfpl.net/
+######################################################################
+
+include ../../../gar/gar.lib/auto.mk
+include config.mk
+

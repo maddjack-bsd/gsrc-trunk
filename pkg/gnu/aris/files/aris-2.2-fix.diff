@@ -1,0 +1,56 @@
+diff -x config.log -x config.status -ru tmp/aris-2.2/src/app.h work/aris-2.2/src/app.h
+--- tmp/aris-2.2/src/app.h	2014-02-27 17:32:07.000000000 -0800
++++ work/aris-2.2/src/app.h	2021-04-17 15:31:51.094497704 -0700
+@@ -106,6 +106,6 @@
+ 
+ int app_set_color (aris_app * app, int index, int red, int green, int blue);
+ /* The main application */
+-aris_app * the_app;
++extern aris_app * the_app;
+ 
+ #endif /* ARIS_APP_H */
+diff -x config.log -x config.status -ru tmp/aris-2.2/src/aris.c work/aris-2.2/src/aris.c
+--- tmp/aris-2.2/src/aris.c	2014-02-28 05:29:10.000000000 -0800
++++ work/aris-2.2/src/aris.c	2021-04-17 15:41:19.536606998 -0700
+@@ -651,6 +651,8 @@
+   return 0;
+ }
+ 
++  aris_app* the_app;
++
+ /* Main function.  There REALLY shouldn't be any explaination needed. */
+ int
+ main (int argc, char *argv[])
+@@ -669,6 +671,7 @@
+   int c_ret;
+   struct arg_items args;
+ 
++
+   c_ret = parse_args (argc, argv, &args);
+ 
+   prems = args.prems;
+diff -x config.log -x config.status -ru tmp/aris-2.2/src/process.c work/aris-2.2/src/process.c
+--- tmp/aris-2.2/src/process.c	2014-03-06 12:53:32.000000000 -0800
++++ work/aris-2.2/src/process.c	2021-04-17 15:31:51.094497704 -0700
+@@ -26,6 +26,9 @@
+ #include <ctype.h>
+ #include <math.h>
+ 
++
++struct connectives_list main_conns;
++
+ /* Eliminates a negation from a string.
+  *  input:
+  *    not_str - the string from which to eliminate the negation.
+diff -x config.log -x config.status -ru tmp/aris-2.2/src/process.h work/aris-2.2/src/process.h
+--- tmp/aris-2.2/src/process.h	2014-03-02 11:30:39.000000000 -0800
++++ work/aris-2.2/src/process.h	2021-04-17 15:31:51.094497704 -0700
+@@ -170,7 +170,7 @@
+ 
+ // The main connectives.
+ 
+-struct connectives_list main_conns;
++extern struct connectives_list main_conns;
+ 
+ // Definitions.
+ 

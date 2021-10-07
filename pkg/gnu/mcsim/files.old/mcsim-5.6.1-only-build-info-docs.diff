@@ -1,0 +1,7 @@
+--- tmp/mcsim-5.6.1/doc/Makefile.am	
++++ work/mcsim-5.6.1/doc/Makefile.am
+@@ -1,4 +1 @@
+ info_TEXINFOS = mcsim.texinfo
+-
+-mydocdir=$(datadir)/mcsim/doc
+-dist_mydoc_DATA = mcsim.pdf mcsim.html

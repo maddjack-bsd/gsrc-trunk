@@ -1,0 +1,291 @@
+diff -x config.log -x config.status -ru work/csblast-2.2.3/src/Makefile work/csblast-2.2.3/src/Makefile
+--- work/csblast-2.2.3/src/Makefile	2012-12-12 10:11:10.000000000 +0000
++++ work/csblast-2.2.3/src/Makefile	2014-07-17 15:39:06.242278415 +0100
+@@ -1,3 +1,7 @@
++# "debug" for debug mode, "prof" for profiling mode, "test" for test
++# mode
++MODE = 
++
+ ### Compiler ###
+ 
+ 
+@@ -45,10 +49,10 @@
+ 
+ 
+ DEFS =	-fno-strict-aliasing \
+-		  -DVERSION="\"$(VERSION)\"" \
+-     	-DBUILD_HOST="\"`hostname`\"" \
+-     	-DBUILD_TIME="\"`date`\"" \
+-     	-DCOMPILER_VERSION="\"`$(CXX) -v 2>&1 | tail -1`\""
++		-DVERSION="\"$(VERSION)\"" \
++		-DBUILD_HOST="\"`hostname`\"" \
++		-DBUILD_TIME="\"`date`\"" \
++		-DCOMPILER_VERSION="\"`$(CXX) -v 2>&1 | tail -1`\""
+ ifdef LOGGING
+ 	DEFS += -DLOGGING -DLOG_MAX_LEVEL=$(LOGGING) 
+ endif
+@@ -59,15 +63,17 @@
+ 
+ ### Files ###
+ 
+-
+-BUILD_DIR = ../build
+-BUILD_DIR_TEST = $(BUILD_DIR)/test
+-BUILD_DIR_PROF = $(BUILD_DIR)/prof
+-BUILD_DIR_DEBUG = $(BUILD_DIR)/debug
++BUILD_ROOT = ../build
++ifeq ($(MODE),test)
++	BUILD_DIR = $(BUILD_ROOT)/test
++else ifeq  ($(MODE),debug)
++	BUILD_DIR = $(BUILD_ROOT)/debug
++else ifeq  ($(MODE),prof)
++	BUILD_DIR = $(BUILD_ROOT)/prof
++else
++	BUILD_DIR = $(BUILD_ROOT)
++endif
+ $(shell mkdir -p $(BUILD_DIR))
+-$(shell mkdir -p $(BUILD_DIR_TEST))
+-$(shell mkdir -p $(BUILD_DIR_DEBUG))
+-$(shell mkdir -p $(BUILD_DIR_PROF))
+ BIN_DIR = ../bin
+ $(shell mkdir -p $(BIN_DIR))
+ LIB_DIR = ../lib
+@@ -80,10 +86,11 @@
+ DEPS =
+ BASE_DEPS = application aa dna log getopt_pp blosum_matrix assert_helpers utils
+ GTEST_DEPS = gtest_main gtest-all
+-OBJECTS = $(patsubst %, $(BUILD_DIR)/%.o, $(BASE_DEPS) $(DEPS))
+-OBJECTS_TEST = $(patsubst %, $(BUILD_DIR_TEST)/%.o, $(BASE_DEPS) $(DEPS) $(GTEST_DEPS))
+-OBJECTS_PROF = $(patsubst %, $(BUILD_DIR_PROF)/%.o, $(BASE_DEPS) $(DEPS))
+-OBJECTS_DEBUG = $(patsubst %, $(BUILD_DIR_DEBUG)/%.o, $(BASE_DEPS) $(DEPS))
++ifeq ($(MODE),test)
++	OBJECTS = $(patsubst %, $(BUILD_DIR)/%.o, $(BASE_DEPS) $(DEPS) $(GTEST_DEPS))
++else
++	OBJECTS = $(patsubst %, $(BUILD_DIR)/%.o, $(BASE_DEPS) $(DEPS))
++endif
+ INC = -I$$HOME/lib/sparsehash/include
+ LIBS = -lm
+ 
+@@ -93,13 +100,17 @@
+ 
+ TARGETS = csblast cstrainset cssgd csbuild csviz csclust cstranslate cscons \
+ 					cscp_neff cstrainset_neff cstrainprofiles
+-TARGETS := $(TARGETS) $(TARGETS:%=%_debug) $(TARGETS:%=%_prof)
+ BINS = $(TARGETS:%=$(BIN_DIR)/%)
+ 
+-PARAMS = $(RELEASE_FLAGS) $(RELEASE_DEFS) $(INC)
+-%_test: PARAMS = $(DEBUG_FLAGS) $(DEBUG_DEFS) $(INC) $(GTEST_FLAGS)
+-%_debug: PARAMS = $(DEBUG_FLAGS) $(DEBUG_DEFS) $(INC)
+-%_prof: PARAMS = $(RELEASE_FLAGS) $(RELEASE_DEFS) $(INC) $(GPROF_FLAGS)
++ifeq ($(MODE),test)
++	PARAMS = $(DEBUG_FLAGS) $(DEBUG_DEFS) $(INC) $(GTEST_FLAGS)
++else ifeq ($(MODE),debug)
++	PARAMS = $(DEBUG_FLAGS) $(DEBUG_DEFS) $(INC)
++else ifeq ($(MODE),prof)
++	PARAMS = $(RELEASE_FLAGS) $(RELEASE_DEFS) $(INC) $(GPROF_FLAGS)
++else
++	PARAMS = $(RELEASE_FLAGS) $(RELEASE_DEFS) $(INC)
++endif
+ 
+ 
+ ### Global targets ###
+@@ -110,42 +121,23 @@
+ clean_build:
+ 	find $(BUILD_DIR) -name '*.o' -exec rm -f '{}' +
+ 
+-clean_build_test:
+-	rm $(BUILD_DIR_TEST)/*.o
+-
+-clean_build_prof:
+-	rm $(BUILD_DIR_PROF)/*.o
+-
+-clean_build_debug:
+-	rm $(BUILD_DIR_DEBUG)/*.o
+-
+ clean_bin:
+ 	rm -f $(BINS)
+ 
+-clean: clean_build clean_build_test clean_build_prof clean_build_debug cclean_bin
++clean: clean_build clean_bin
+ 
+ .PHONY: all all_test clean clean_build clean_bin
+ 
+ $(BUILD_DIR)/%.o: %.$(EXT) $(HEADERS)
+ 	$(CXX) $(PARAMS) -c -o $@ $<
+ 
+-$(BUILD_DIR_TEST)/%.o: %.$(EXT) $(HEADERS)
+-	$(CXX) $(PARAMS) -c -o $@ $<
+-
+-$(BUILD_DIR_PROF)/%.o: %.$(EXT) $(HEADERS)
+-	$(CXX) $(PARAMS) -c -o $@ $<
+-
+-$(BUILD_DIR_DEBUG)/%.o: %.$(EXT) $(HEADERS)
+-	$(CXX) $(PARAMS) -c -o $@ $<
+-
+-
+ ### GTEST targets
+ 
+ 
+-$(BUILD_DIR_TEST)/gtest-all.o : $(GTEST_SRC)
++$(BUILD_DIR)/gtest-all.o : $(GTEST_SRC)
+ 	$(CXX) $(PARAMS) -c -o $@ $(GTEST_DIR)/src/gtest-all.cc
+ 
+-$(BUILD_DIR_TEST)/gtest_main.o : $(GTEST_SRC)
++$(BUILD_DIR)/gtest_main.o : $(GTEST_SRC)
+ 	$(CXX) $(PARAMS) -c -o $@ $(GTEST_DIR)/src/gtest_main.cc
+ 
+ 
+@@ -156,13 +148,6 @@
+ csblast: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-csblast_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-csblast_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-
+ ### cstrainset ###
+ 
+ 
+@@ -170,12 +155,6 @@
+ cstrainset: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-cstrainset_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-cstrainset_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### cssgd ###
+ 
+@@ -184,12 +163,6 @@
+ cssgd: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-cssgd_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-cssgd_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### cshmc ###
+ 
+@@ -198,12 +171,6 @@
+ cshmc: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-cshmc_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-cshmc_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### csbuild ###
+ 
+@@ -212,12 +179,6 @@
+ csbuild: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-csbuild_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-csbuild_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### cscons ###
+ 
+@@ -226,12 +187,6 @@
+ cscons: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-cscons_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-cscons_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### csviz ###
+ 
+@@ -240,12 +195,6 @@
+ csviz: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-csviz_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-csviz_prof: $(OBJECTS_RPOF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### csclust ###
+ 
+@@ -254,12 +203,6 @@
+ csclust: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-csclust_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-csclust_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### cstranslate ###
+ 
+@@ -268,12 +211,6 @@
+ cstranslate: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+-cstranslate_debug: $(OBJECTS_DEBUG)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+-cstranslate_prof: $(OBJECTS_PROF)
+-	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+-
+ 
+ ### cscp_neff ###
+ 
+@@ -307,11 +244,11 @@
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ DEPS = sgd_test
+-sgd_test: $(OBJECTS_TEST)
++sgd_test: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ DEPS = crf_test
+-crf_test: $(OBJECTS_TEST)
++crf_test: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ DEPS = count_profile_test
+@@ -319,17 +256,17 @@
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ DEPS = profile_test
+-profile_test: $(OBJECTS_TEST)
++profile_test: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ DEPS = library_pseudocounts_test
+-library_pseudocounts_test: $(OBJECTS_TEST)
++library_pseudocounts_test: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ DEPS = pseudocounts_test
+-pseudocounts_test: $(OBJECTS_TEST)
++pseudocounts_test: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)
+ 
+ DEPS = alignment_test blast_hits
+-alignment_test: $(OBJECTS_TEST)
++alignment_test: $(OBJECTS)
+ 	$(CXX) $(PARAMS) -o $(BIN_DIR)/$(OUTFILE) $+ $(LIBS)

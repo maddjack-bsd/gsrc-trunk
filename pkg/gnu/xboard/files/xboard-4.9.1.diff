@@ -1,0 +1,24 @@
+diff -x config.log -x config.status -ru tmp/xboard-4.9.1/backend.h work/xboard-4.9.1/backend.h
+--- tmp/xboard-4.9.1/backend.h	2016-05-17 22:50:45.000000000 -0700
++++ work/xboard-4.9.1/backend.h	2021-04-22 10:24:39.991155502 -0700
+@@ -242,7 +242,7 @@
+ 
+ /* ICS vars used with backend.c and zippy.c */
+ enum ICS_TYPE { ICS_GENERIC, ICS_ICC, ICS_FICS, ICS_CHESSNET /* not really supported */ };
+-enum ICS_TYPE ics_type;
++extern enum ICS_TYPE ics_type;
+ 
+ /* pgntags.c prototypes
+  */
+diff -x config.log -x config.status -ru tmp/xboard-4.9.1/evalgraph.h work/xboard-4.9.1/evalgraph.h
+--- tmp/xboard-4.9.1/evalgraph.h	2016-05-17 22:50:45.000000000 -0700
++++ work/xboard-4.9.1/evalgraph.h	2021-04-22 10:27:29.759734684 -0700
+@@ -34,7 +34,7 @@
+ #define OPEN   0
+ 
+ /* Module globals */
+-ChessProgramStats_Move * currPvInfo;
++extern ChessProgramStats_Move * currPvInfo;
+ extern int currFirst;
+ extern int currLast;
+ extern int currCurrent;
